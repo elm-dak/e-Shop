@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace Shop.Models
 {
@@ -16,11 +17,6 @@ namespace Shop.Models
         [Display(Name = "Product Picture ")]
         public string Image { get; set;}
 
-        [NotMapped]
-        [Display(Name = "Product Picture ")]
-        public IFormFile ImageFile { get; set; }
-
-
         [Display(Name = "Product Color ")]
         public string ProductColor { get; set;}
         [Required]
@@ -28,7 +24,7 @@ namespace Shop.Models
         public string ProductSize { get; set;}
 
         [Display(Name = "Product Type ")]
-        [Required]
+       
         public int ProductTypeId { get; set;}
         [ForeignKey("ProductTypeId")]
         public virtual ProductTypes ProductTypes { get; set;}

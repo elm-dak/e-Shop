@@ -23,6 +23,14 @@ namespace Shop.Areas.Admin.Controllers
         {
             return View(_db.Products.Include(c => c.ProductTypes).ToList());
         }
+        [HttpPost]
+        public IActionResult Index(decimal lowAmount, decimal largeAmount)
+        {
+            var products =_db.Products.Include(c => c.ProductTypes)
+                .Where(c=>c.Price >= lowAmount && c.Price<=largeAmount).ToList();
+
+            return View(products);
+        }
 
         public IActionResult Create()
         {
@@ -34,59 +42,86 @@ namespace Shop.Areas.Admin.Controllers
 
 
 
+
         [HttpPost]
-
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Image,ImageFile,ProductColor,ProductSize,ProductTypeId,ProductTypes")] Products products)
+        public async Task<IActionResult> Create(IFormFile file, [Bind("Id,Name,Description , Price ,ProductColor ,ProductSize,ProductTypeId ")] Products book)
         {
-            if (ModelState.IsValid)
+
+            if (file != null)
             {
-                if (products.Image != null)
-                {
-                    /* string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
-                     string uploadsFolder = Path.Combine(_he.WebRootPath, "Images/");
-                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                     using (var fileStream = new FileStream(filePath, FileMode.Create))
-                     {
-                         await image.CopyToAsync(fileStream);
-                     }*/
+                string filename = file.FileName;
+                //  string  ext = Path.GetExtension(file.FileName);
+                string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images"));
+                using (var filestream = new FileStream(Path.Combine(path, filename), FileMode.Create))
+                { await file.CopyToAsync(filestream); }
 
-
-                    /*string folder = "Images/";
-                    folder += products.Image.FileName + Guid.NewGuid().ToString();
-                    string name = Path.Combine(_he.WebRootPath, folder);
-                    await products.Image.CopyToAsync(new FileStream(name, FileMode.Create));*/
-
-                    /* var name = Path.Combine(_he.WebRootPath + "~/wwwroot/Images", Path.GetFileName(image.FileName));
-                     await image.CopyToAsync(new FileStream(name, FileMode.Create));
-                     products.Image = "Images/" + image.FileName;*/
-
-                    string wwwRootPath = _he.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(products.ImageFile.FileName);
-                    string extension = Path.GetExtension(products.ImageFile.FileName);
-                    string path = Path.Combine(wwwRootPath + "/images/", fileName);
-                    using (var fileStream = new FileStream(path, FileMode.Create))
-                    {
-                        await products.ImageFile.CopyToAsync(fileStream);
-                    }
-                }
-                if (products.Image == null) {
-
-                    products.Image = "/Images/product-6.png";
-
-
-
-                }
-                _db.Products.Add(products);
-                await _db.SaveChangesAsync();
-                  //  TempData["save"] = "Product has been saved successfully!";
-                return RedirectToAction(nameof(Index));
+                book.Image = filename;
             }
 
+            _db.Add(book);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
 
-            return View(products);
         }
 
+
+
+        /*     [HttpPost]
+
+
+             public async Task<IActionResult> Create(Products product)
+             {
+                 if (ModelState.IsValid)
+                 {
+
+
+                     if (product.Image != null)
+                     {
+                         *//* string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                          string uploadsFolder = Path.Combine(_he.WebRootPath, "Images/");
+                          string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                          using (var fileStream = new FileStream(filePath, FileMode.Create))
+                          {
+                              await image.CopyToAsync(fileStream);
+                          }*/
+
+
+        /*string folder = "Images/";
+        folder += products.Image.FileName + Guid.NewGuid().ToString();
+        string name = Path.Combine(_he.WebRootPath, folder);
+        await products.Image.CopyToAsync(new FileStream(name, FileMode.Create));*/
+
+        /* var name = Path.Combine(_he.WebRootPath + "~/wwwroot/Images", Path.GetFileName(image.FileName));
+         await image.CopyToAsync(new FileStream(name, FileMode.Create));
+         products.Image = "Images/" + image.FileName;*//*
+
+        string wwwRootPath = _he.WebRootPath;
+        string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
+        string extension = Path.GetExtension(product.ImageFile.FileName);
+        string path = Path.Combine(wwwRootPath + "/images/", fileName);
+        using (var fileStream = new FileStream(path, FileMode.Create))
+        {
+            await product.ImageFile.CopyToAsync(fileStream);
+        }
+    }
+    if (product.Image == null) {
+
+        product.Image = "/Images/product-6.png";
+
+
+
+    }
+    _db.Products.Add(product);
+    await _db.SaveChangesAsync();
+       TempData["save"] = "Product has been saved successfully!";
+    return RedirectToAction(nameof(Index));
+}
+
+
+return View(product);
+}
+*/
 
         // same methode de create dans autre methode 
 
@@ -218,7 +253,7 @@ namespace Shop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var product = _db.Products.Find(id);
+            var product = _db.Products.Include(c => c.ProductTypes).FirstOrDefault(c => c.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -245,7 +280,7 @@ namespace Shop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var product = _db.Products.Find(id);
+            var product = _db.Products.Include(c => c.ProductTypes).FirstOrDefault(c => c.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -257,7 +292,8 @@ namespace Shop.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Products products, int? id)
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirm(Products products, int? id)
         {
             if (id == null)
             {
@@ -269,7 +305,7 @@ namespace Shop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var product = _db.Products.Find(id);
+            var product = _db.Products.FirstOrDefault();
 
             if (product == null)
             {
@@ -278,7 +314,7 @@ namespace Shop.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Remove(product);
+                _db.Products.Remove(product);
                 await _db.SaveChangesAsync();
                 TempData["save"] = "Warning: Product type has been deleted!";
                 return RedirectToAction(nameof(Index));

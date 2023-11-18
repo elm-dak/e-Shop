@@ -15,30 +15,49 @@
     </div>
 </div>
 
+<form methode="post"> 
+    <div class="row">
+        <div class="col-3">
+            <input type="text" class="form-control" name="lowAmount" />
+
+        </div>
+        <div class="col-3">
+            <input type="text" class="form-control" name="largeAmount" />
+        </div>
+        <div class="col-3">
+            <input type="submit" value="Search" class="btn btn-success" />
+        </div>
+        <div class="col-3"></div>
+    </div>
+
+
+
+</form>
+</br>
 <div>
     <table class="table table-striped border">
         <tr class="table-info">
             <th>
-                @Html.DisplayNameFor(expression:c=>c.Name)
+                @Html.DisplayNameFor(c =>c.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(expression: c => c.Description)
+                @Html.DisplayNameFor(c => c.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(expression:c=>c.Price)
+                @Html.DisplayNameFor(c=>c.Price)
             </th>
         
             <th>
-            @Html.DisplayNameFor(expression: c => c.ImageFile)
+            @Html.DisplayNameFor( c => c.Image)
             </th>
             <th>
-                @Html.DisplayNameFor(expression:c=>c.ProductColor)
+                @Html.DisplayNameFor(c=>c.ProductColor)
             </th>
             <th>
-                @Html.DisplayNameFor(expression:c=>c.ProductSize)
+                @Html.DisplayNameFor(c=>c.ProductSize)
             </th>
             <th>
-                @Html.DisplayNameFor(expression:c=>c.ProductTypeId)
+                @Html.DisplayNameFor(c=>c.ProductTypeId)
             </th>
             <th> </th>
             <th></th>
