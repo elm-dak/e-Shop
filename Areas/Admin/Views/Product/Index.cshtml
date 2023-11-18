@@ -1,0 +1,106 @@
+﻿@using Shop.Models;
+@model IEnumerable<Products>
+@{
+    ViewData["Title"] = "Index Page";
+}
+
+<br />
+<br />
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-info">Product List</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a asp-action="Create" class="btn btn-info">&nbsp;<i class="fa-solid fa-plus" style="color: #ffffff;"></i>Add New Product</a>
+    </div>
+</div>
+
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+                @Html.DisplayNameFor(expression:c=>c.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(expression: c => c.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(expression:c=>c.Price)
+            </th>
+        
+            <th>
+            @Html.DisplayNameFor(expression: c => c.ImageFile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(expression:c=>c.ProductColor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(expression:c=>c.ProductSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(expression:c=>c.ProductTypeId)
+            </th>
+            <th> </th>
+            <th></th>
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Price</td>
+                <td>@item.Image</td>
+                <td>@item.ProductColor</td>
+                <td>@item.ProductSize</td>
+                <td>@item.ProductTypes.ProductType</td>
+                <td>
+                    <partial name="_ButtonPartial" model="@item.Id" />
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+
+@section scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
+
+    <!-- Include iziToast JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            var save = '@TempData["save"]'; // Add single quotes around TempData["save"]
+            if (save != '' && save.includes("saved successfully")) {
+                iziToast.success({
+                    title: save,
+                    icon: 'fas fa-check', // Use Font Awesome class for a checkmark icon
+                    position: 'topRight', // Adjust position as needed
+                });
+            }
+
+            else if (save != '' && save.includes("updated successfully")) {
+                iziToast.success({
+                    title: save,
+                    icon: 'fas fa-edit', // Use Font Awesome class for a checkmark icon
+                    position: 'topRight', // Adjust position as needed
+                    backgroundColor: '#2196F3',
+                });
+            }
+            else if (save != '' && save.includes("has been deleted")) {
+                iziToast.success({
+                    title: save,
+                    icon: 'fas fa-trash-alt', // Use Font Awesome class for a checkmark icon
+                    position: 'topRight', // Adjust position as needed
+                    backgroundColor: '#F44336',
+                });
+            }
+        });
+
+
+    </script>
+}
+

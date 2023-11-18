@@ -1,0 +1,146 @@
+﻿@using Shop.Models;
+@model IEnumerable<Shop.Models.ProductTypes>
+@{
+    ViewData["Title"] = "Index Page";
+}
+
+<br />
+<br />
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-info">Product Type List</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a asp-action="Create" class="btn btn-info">&nbsp;<i class="fa-solid fa-plus" style="color: #ffffff;"></i> New Product</a>
+    </div>
+</div>
+
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+                @Html.DisplayNameFor(expression:c=>c.ProductType)
+            </th>
+            <th> </th>
+            <th></th>
+
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.ProductType</td>
+                <td>
+                    <partial name="_ButtonPartial" model="@item.Id" />
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+@* @section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            var save = '@TempData["save"]'; // Add single quotes around TempData["save"]
+            if (save != null) {
+                // Using SweetAlert2
+              Swal.fire({
+                    text: save,
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                }); 
+            }
+        });
+
+    </script>
+} *@
+
+
+@* section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var save = '@TempData["save"]';
+            if (save !== '') {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    title: save,
+                    icon: getIcon()
+                });
+            }
+
+            function getIcon() {
+                // Determine the icon based on the TempData["save"] content
+                if (save.includes("saved successfully")) {
+                    return "success";
+                } else if (save.includes("updated successfully")) {
+                    return "info";
+                } else if (save.includes("has been deleted")) {
+                    return "error";
+                } else {
+                    return "info"; // Default to info icon if none of the conditions match
+                }
+            }
+        });
+    </script>
+
+  
+
+}
+ *@
+
+
+
+
+@section scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
+
+    <!-- Include iziToast JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            var save = '@TempData["save"]'; // Add single quotes around TempData["save"]
+            if (save != '' && save.includes("saved successfully")) {
+                iziToast.success({
+                    title: save,
+                    icon: 'fas fa-check', // Use Font Awesome class for a checkmark icon
+                    position: 'topRight', // Adjust position as needed
+                });
+            }
+
+            else if (save != '' && save.includes("updated successfully")) {
+                iziToast.success({
+                    title: save,
+                    icon: 'fas fa-edit', // Use Font Awesome class for a checkmark icon
+                    position: 'topRight', // Adjust position as needed
+                    backgroundColor: '#2196F3',
+                });
+            }
+            else if (save != '' && save.includes("has been deleted")) {
+                iziToast.success({
+                    title: save,
+                    icon: 'fas fa-trash-alt', // Use Font Awesome class for a checkmark icon
+                    position: 'topRight', // Adjust position as needed
+                    backgroundColor: '#F44336',
+                });
+            }
+        });
+
+
+    </script>
+}
+

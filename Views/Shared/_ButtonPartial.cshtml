@@ -1,0 +1,19 @@
+﻿@model int
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<td style="width: 150px">
+    <!-- _ActionButtonPartial.cshtml -->
+    <div class="btn-group">
+        <a asp-action="Edit" asp-controller="@ViewContext.RouteData.Values["controller"]" class="btn btn-warning rounded border" asp-route-id="@Model">
+            <i class="fa-solid fa-pen-to-square" style="color: #fff;"></i>
+        </a>
+        <a asp-action="Details" asp-controller="@ViewContext.RouteData.Values["controller"]" class="btn btn-dark rounded border" asp-route-id="@Model">
+            <i class="fa-solid fa-list" style="color: #fff;"></i>
+        </a>
+        <a asp-action="Delete" asp-controller="@ViewContext.RouteData.Values["controller"]" class="btn btn-danger rounded border" asp-route-id="@Model">
+            <i class="fa-solid fa-trash" style="color: #fff;"></i>
+        </a>
+    </div>
+
+</td>
